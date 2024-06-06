@@ -1,0 +1,64 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY REG_F IS
+	PORT(
+		LOAD_R, CLK: IN STD_LOGIC;
+		D: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+		S: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+);
+END REG_F;
+
+ARCHITECTURE REG_F OF REG_F IS
+	COMPONENT ffd is
+   		PORT (ck, clr, set, d : in  std_logic; --NÃO ESQUECER QUE COLOCAR O CLOCK_DIV
+                       q : out std_logic);
+	END COMPONENT ffd;
+	
+	COMPONENT mux_2x1 is
+	Port (
+        	A, B : in  STD_LOGIC;
+        	C    : in  STD_LOGIC;
+        	Y    : out STD_LOGIC
+   	);
+	END COMPONENT mux_2x1;
+	
+	SIGNAL Q9, Q8, Q7, Q6, Q5, Q4,Q3, Q2, Q1, Q0: STD_LOGIC;
+	SIGNAL EN9, EN8, EN7, EN6, EN5, EN4, EN3, EN2, EN1, EN0: STD_LOGIC;
+
+BEGIN
+
+EN_9 : MUX_2X1 PORT MAP (Q9, D(9), LOAD_R, EN9);
+EN_8 : MUX_2X1 PORT MAP (Q8, D(8), LOAD_R, EN8);
+EN_7 : MUX_2X1 PORT MAP (Q7, D(7), LOAD_R, EN7);
+EN_6 : MUX_2X1 PORT MAP (Q6, D(6), LOAD_R, EN6);
+EN_5 : MUX_2X1 PORT MAP (Q5, D(5), LOAD_R, EN5);
+EN_4 : MUX_2X1 PORT MAP (Q4, D(4), LOAD_R, EN4);
+EN_3 : MUX_2X1 PORT MAP (Q3, D(3), LOAD_R, EN3);
+EN_2 : MUX_2X1 PORT MAP (Q2, D(2), LOAD_R, EN2);
+EN_1 : MUX_2X1 PORT MAP (Q1, D(1), LOAD_R, EN1);
+EN_0 : MUX_2X1 PORT MAP (Q0, D(0), LOAD_R, EN0);
+
+S9: FFD PORT MAP (CLK, '1', '1', EN9,Q9);
+S8: FFD PORT MAP (CLK, '1', '1', EN8,Q8);
+S7: FFD PORT MAP (CLK, '1', '1', EN7,Q7);
+S6: FFD PORT MAP (CLK, '1', '1', EN6,Q6);
+S5: FFD PORT MAP (CLK, '1', '1', EN5,Q5);
+S4: FFD PORT MAP (CLK, '1', '1', EN4,Q4);
+S3: FFD PORT MAP (CLK, '1', '1', EN3,Q3);
+S2: FFD PORT MAP (CLK, '1', '1', EN2,Q2);
+S1: FFD PORT MAP (CLK, '1', '1', EN1,Q1);
+S0: FFD PORT MAP (CLK, '1', '1', EN0,Q0);
+
+S(9) <= Q9;
+S(8) <= Q8;
+S(7) <= Q7;
+S(6) <= Q6;
+S(5) <= Q5;
+S(4) <= Q4;
+S(3) <= Q3;
+S(2) <= Q2;
+S(1) <= Q1;
+S(0) <= Q0;
+
+END ARCHITECTURE REG_F;

@@ -1,0 +1,42 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY REG_2BITS IS
+	PORT(
+		CLR_R, LOAD_R, CLK: IN STD_LOGIC;
+		D: IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+		S: OUT STD_LOGIC_VECTOR (3 DOWNTO 0)
+);
+END REG_2BITS;
+
+ARCHITECTURE REG_2BITS OF REG_2BITS IS
+	COMPONENT ffd is
+   		PORT (ck, clr, set, d : in  std_logic; --NÃO ESQUECER QUE COLOCAR O CLOCK_DIV
+                       q : out std_logic);
+	END COMPONENT ffd;
+	
+	COMPONENT mux_2x1 is
+	Port (
+        	A, B : in  STD_LOGIC;
+        	C    : in  STD_LOGIC;
+        	Y    : out STD_LOGIC
+   	);
+	END COMPONENT mux_2x1;
+	
+	SIGNAL Q1, Q0: STD_LOGIC;
+	SIGNAL EN1, EN0: STD_LOGIC;
+
+BEGIN
+
+EN_1 : MUX_2X1 PORT MAP (Q1, D(1), LOAD_R, EN1);
+EN_0 : MUX_2X1 PORT MAP (Q0, D(0), LOAD_R, EN0);
+
+
+S1: FFD PORT MAP (CLK,CLR_R ,'1', EN1,Q1);
+S0: FFD PORT MAP (CLK,CLR_R ,'1', EN0,Q0);
+
+
+S(1) <= Q1;
+S(0) <= Q0;
+
+END ARCHITECTURE;
